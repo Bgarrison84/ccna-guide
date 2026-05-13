@@ -1,7 +1,7 @@
 export interface Question {
   question: string;
   options: string[];
-  answer: number; // Index of the correct option
+  answer: number;
   explanation: string;
 }
 
@@ -20,227 +20,326 @@ export interface Module {
 
 export const modules: Module[] = [
   {
-    id: 'intro',
-    title: 'Introduction to Networking',
-    description: 'Learn the basic components of a computer and its role in a networking system.',
+    id: 'fundamentals',
+    title: 'Network Fundamentals',
+    description: 'The foundation of all communication.',
     sections: [
       {
-        title: 'Overview',
-        content: 'In this introductory chapter, you will look at the components of a computer and at the role of computers in a networking system. You will use the "ground up" approach to learning networking, starting with the most basic component of a network – the computer.'
+        title: 'TCP vs UDP',
+        content: 'TCP (Transmission Control Protocol) is a connection-oriented, reliable protocol that uses a 3-way handshake. UDP (User Datagram Protocol) is connectionless and "best-effort", making it ideal for real-time traffic like VoIP.'
       },
       {
-        title: 'The Internet Analogy',
-        content: 'You can think of the Internet as a tree, and computers as the leaves on the tree. Computers are the sources and receivers of information, both giving to and taking from the Internet. Note that computers can function without the Internet, but that the Internet cannot exist without computers.'
+        title: 'Cabling & Media',
+        content: 'Cat6 supports 10Gbps up to 55 meters. Multimode fiber uses LED/VCSEL light and is used for shorter distances (up to 550m), while Singlemode fiber uses lasers for long distances (up to 40km+).'
+      }
+    ],
+    quiz: [
+      {
+        question: 'Which of the following is a characteristic of UDP?',
+        options: ['Connection-oriented', 'Reliable delivery', 'Low overhead', '3-way handshake'],
+        answer: 2,
+        explanation: 'UDP is connectionless and has lower overhead because it does not provide reliability, ordering, or error recovery.'
       }
     ]
   },
   {
     id: 'osi-model',
     title: 'The OSI Model',
-    description: 'Understanding the 7 layers of the OSI model.',
+    description: 'The 7-layer framework for understanding data flow.',
     sections: [
       {
-        title: 'Background',
-        content: 'To address the problem of network incompatibility, the International Organization for Standardization (ISO) researched many network schemes and released the OSI reference model in 1984. This model serves as a foundation for understanding how data travels through a network.'
+        title: 'The Upper Layers (5-7)',
+        content: '7. Application: Network services for users.\n6. Presentation: Formatting and encryption.\n5. Session: Managing dialogues between hosts.'
       },
       {
-        title: 'The 7 Layers',
-        content: '7. Application: User interface and network services.\n6. Presentation: Data representation and encryption.\n5. Session: Inter-host communication management.\n4. Transport: End-to-end connections and reliability.\n3. Network: Path determination and IP (Logical) addressing.\n2. Data Link: Error detection and MAC (Physical) addressing.\n1. Physical: Binary transmission over media.'
+        title: 'The Lower Layers (1-4)',
+        content: '4. Transport: Segments data and provides flow control (TCP/UDP).\n3. Network: Routes packets using logical IP addressing.\n2. Data Link: Frames data using physical MAC addresses.\n1. Physical: Transmits bits over the wire.'
       }
     ],
     quiz: [
       {
-        question: 'Which layer of the OSI model is responsible for path determination and logical addressing?',
-        options: ['Data Link', 'Transport', 'Network', 'Physical'],
+        question: 'At which layer of the OSI model does a router operate?',
+        options: ['Layer 1', 'Layer 2', 'Layer 3', 'Layer 4'],
         answer: 2,
-        explanation: 'The Network layer (Layer 3) is responsible for path determination and IP (logical) addressing.'
+        explanation: 'Routers operate at Layer 3 (Network), using IP addresses to route packets.'
       }
     ]
   },
   {
-    id: 'switching',
+    id: 'ethernet',
     title: 'Ethernet & Switching',
-    description: 'How switches move data within a local network.',
+    description: 'Building the local area network.',
     sections: [
       {
-        title: 'Switching Basics',
-        content: 'When a frame enters a Cisco switch, the switch examines the Source MAC address to learn which device is connected to which port. This information is stored in the MAC Address Table (also called CAM table).'
-      },
-      {
         title: 'The MAC Address Table',
-        content: 'The MAC address table stores the mapping between MAC addresses and physical ports. You can view this table using the command: show mac address-table.'
+        content: 'Switches learn source MAC addresses and record them in the CAM table along with the port they were seen on. If a destination MAC is unknown, the switch floods the frame out all ports except the source.'
       }
     ],
     quiz: [
       {
-        question: 'When a frame enters a Cisco switch, what field does the switch learn from?',
-        options: ['Preamble', 'FCS', 'Source MAC', 'Destination MAC'],
+        question: 'What does a switch do when it receives a frame with an unknown destination MAC address?',
+        options: ['Drops the frame', 'Sends it to the default gateway', 'Floods it out all ports except the incoming port', 'Buffers the frame until it learns the address'],
         answer: 2,
-        explanation: 'The switch examines and learns the source MAC addresses of incoming frames to populate its MAC address table.'
-      },
-      {
-        question: 'What command allows you to view the addresses learned by a Cisco switch?',
-        options: ['show mac-address-table', 'show mac address-table', 'show addresses', 'show mac addresses'],
-        answer: 1,
-        explanation: 'The standard Cisco IOS command is "show mac address-table".'
+        explanation: 'This process is known as Unknown Unicast Flooding.'
       }
     ]
   },
   {
     id: 'vlans',
-    title: 'VLANs (Virtual LANs)',
-    description: 'Segmenting networks for performance and security.',
+    title: 'VLANs & Trunking',
+    description: 'Segmentation and link aggregation.',
     sections: [
       {
-        title: 'Purpose of VLANs',
-        content: 'VLANs divide a single broadcast domain into multiple smaller broadcast domains. This improves network performance and security by reducing the size of the broadcast domains and isolating network traffic.'
-      },
-      {
-        title: 'VLAN Defaults',
-        content: 'On a Cisco switch, VLANs 1, 1002, 1003, 1004, and 1005 exist by default and cannot be deleted. All ports are assigned to VLAN 1 by default.'
+        title: '802.1Q Trunking',
+        content: 'Standard trunking protocol that inserts a 4-byte tag into the Ethernet frame header. The "Native VLAN" is the only VLAN that is untagged across the trunk.'
       }
     ],
     quiz: [
       {
-        question: 'Which of the following statements about VLANs is true?',
-        options: [
-          'VLANs divide a collision domain into multiple collision domains.',
-          'VLANs divide a broadcast domain into multiple broadcast domains.'
-        ],
-        answer: 1,
-        explanation: 'Virtual Local Area Networks (VLANs) divide a single broadcast domain into multiple smaller broadcast domains.'
-      },
+        question: 'Which VLAN is untagged on a trunk by default?',
+        options: ['VLAN 1', 'VLAN 10', 'Native VLAN', 'Management VLAN'],
+        answer: 2,
+        explanation: 'Frames in the Native VLAN are not tagged when sent across an 802.1Q trunk.'
+      }
+    ]
+  },
+  {
+    id: 'stp',
+    title: 'Spanning Tree Protocol (STP)',
+    description: 'Eliminating Layer 2 loops.',
+    sections: [
       {
-        question: 'Which VLAN is untagged on a trunk port by default?',
-        options: ['The default VLAN', 'The native VLAN', 'The access VLAN', 'VLAN 10'],
+        title: 'Root Bridge Election',
+        content: 'The switch with the lowest Bridge ID (Priority + MAC Address) becomes the Root Bridge. Default priority is 32768.'
+      }
+    ],
+    quiz: [
+      {
+        question: 'What is the default STP bridge priority?',
+        options: ['4096', '16384', '32768', '65536'],
+        answer: 2,
+        explanation: 'The default priority is 32768. Lowering this makes a switch more likely to become the Root Bridge.'
+      }
+    ]
+  },
+  {
+    id: 'etherchannel',
+    title: 'EtherChannel',
+    description: 'Bundling links for high bandwidth and redundancy.',
+    sections: [
+      {
+        title: 'LACP vs PAgP',
+        content: 'LACP (802.3ad) is industry standard. PAgP is Cisco proprietary. Both allow bundling up to 8 physical links into one logical interface.'
+      }
+    ],
+    quiz: [
+      {
+        question: 'Which EtherChannel protocol is industry standard?',
+        options: ['PAgP', 'LACP', 'STP', 'DTP'],
         answer: 1,
-        explanation: 'The native VLAN is the one VLAN that is untagged on a 802.1Q trunk port.'
+        explanation: 'LACP (Link Aggregation Control Protocol) is defined in 802.3ad and is vendor-neutral.'
       }
     ]
   },
   {
     id: 'subnetting',
-    title: 'IP Addressing & Subnetting',
-    description: 'Master the art of dividing networks into smaller sub-networks.',
+    title: 'IPv4 Addressing & Subnetting',
+    description: 'Mastering the math of networks.',
     sections: [
       {
-        title: 'IPv4 Addressing',
-        content: 'An IPv4 address is a 32-bit logical address. The formula 2^N - 2 is used to calculate the number of hosts, where N is the number of host bits.'
-      },
-      {
-        title: 'Subnet Masks',
-        content: 'A subnet mask (e.g., 255.255.255.192 for a /26) tells the device which part of the IP address is the Network ID and which part is the Host ID.'
+        title: 'Subnet Math',
+        content: 'Use the formula 2^N to find subnets and 2^H - 2 to find usable hosts (H = host bits). A /26 has 6 host bits, meaning 62 usable hosts (2^6 - 2 = 62).'
       }
     ],
     quiz: [
       {
-        question: 'What is the subnet mask for a /26 prefix?',
-        options: ['255.255.255.0', '255.255.255.128', '255.255.255.192', '255.255.255.224'],
-        answer: 2,
-        explanation: 'A /26 prefix uses 26 bits for the network portion. The 4th octet has 2 network bits (11000000 = 192). So the mask is 255.255.255.192.'
-      },
-      {
-        question: 'Given the following address and mask 172.16.10.1 255.255.248.0, what is the broadcast address for the subnet?',
-        options: ['172.16.15.255', '172.16.8.0', '172.16.16.255', '172.16.255.255'],
-        answer: 0,
-        explanation: 'The mask 255.255.248.0 is a /21. The increment in the 3rd octet is 8. The network address is 172.16.8.0, and the broadcast is 172.16.15.255.'
-      }
-    ]
-  },
-  {
-    id: 'routing',
-    title: 'Routing Fundamentals',
-    description: 'How routers connect different networks and choose the best path.',
-    sections: [
-      {
-        title: 'The Role of a Router',
-        content: 'Routers operate at Layer 3 of the OSI model. Their primary job is to forward packets between different networks based on the destination IP address.'
-      },
-      {
-        title: 'Longest Prefix Match',
-        content: 'When selecting which route should be used to forward a particular packet, the router only considers one thing: the most specific matching route (longest prefix match).'
-      }
-    ],
-    quiz: [
-      {
-        question: 'What does the routing protocol code B indicate in the routing table?',
-        options: ['EIGRP', 'RIP', 'OSPF', 'BGP'],
-        answer: 3,
-        explanation: 'The code "B" in the Cisco IOS routing table stands for BGP (Border Gateway Protocol).'
-      },
-      {
-        question: 'What is the default administrative distance for OSPF?',
-        options: ['90', '100', '110', '120'],
-        answer: 2,
-        explanation: 'The default AD for OSPF is 110. (Connected=0, Static=1, EIGRP=90, RIP=120).'
+        question: 'How many usable hosts are in a /28 subnet?',
+        options: ['12', '14', '16', '30'],
+        answer: 1,
+        explanation: 'A /28 has 4 host bits. 2^4 = 16. Subtract 2 for network and broadcast = 14 usable hosts.'
       }
     ]
   },
   {
     id: 'ipv6',
     title: 'IPv6 Addressing',
-    description: 'The next generation of IP addressing.',
+    description: 'The future of the internet.',
     sections: [
       {
-        title: 'IPv6 Structure',
-        content: 'IPv6 addresses are 128 bits long and written in hexadecimal. The :: may be used once in an address to represent consecutive sections of 0000.'
-      },
-      {
-        title: 'Link-Local Addresses',
-        content: 'Link-local addresses (fe80::/10) are used for communication within a single local segment and are not routable outside that segment.'
+        title: 'Address Types',
+        content: 'Global Unicast (2000::/3): Like public IPv4.\nLink-Local (FE80::/10): For local segment comms.\nMulticast (FF00::/8): Replaces broadcast.'
       }
     ],
     quiz: [
       {
-        question: 'What prefix is reserved for IPv6 link-local addresses?',
-        options: ['fe80::/10', 'fec0::/10', 'ff00::/8', '2001::/3'],
-        answer: 0,
-        explanation: 'fe80::/10 is the prefix reserved for link-local addressing in IPv6.'
-      },
-      {
-        question: 'What command causes a router interface to autoconfigure its host portion using the EUI-64 method?',
-        options: [
-          'ipv6 address autoconfig',
-          'ipv6 address eui-64',
-          'ipv6 address 2001:db8::/64 eui-64',
-          'ipv6 enable'
-        ],
+        question: 'What is the prefix for IPv6 Link-Local addresses?',
+        options: ['2000::/3', 'FC00::/7', 'FE80::/10', 'FF00::/8'],
         answer: 2,
-        explanation: 'The "ipv6 address [prefix]/64 eui-64" command enables the modified EUI-64 method on the interface.'
+        explanation: 'FE80::/10 is reserved for link-local traffic.'
       }
     ]
   },
   {
-    id: 'stp',
-    title: 'STP (Spanning Tree Protocol)',
-    description: 'Preventing loops in a switched network.',
+    id: 'routing-basics',
+    title: 'Routing Fundamentals',
+    description: 'How packets find their way.',
     sections: [
       {
-        title: 'Need for STP',
-        content: 'STP prevents Layer 2 loops and the resulting broadcast storms and MAC table instability. It does this by placing redundant ports into a blocking state.'
-      },
-      {
-        title: 'Port Roles',
-        content: 'Designated ports point away from the root bridge and are in a forwarding state. Root ports point toward the root bridge. Alternate ports (in RSTP) provide a backup path.'
+        title: 'The Routing Table',
+        content: 'C = Connected, S = Static, O = OSPF, D = EIGRP. Routers always prefer the Longest Prefix Match when multiple routes exist for the same destination.'
       }
     ],
     quiz: [
       {
-        question: 'Which STP port role points away from the root bridge and is in a forwarding state?',
-        options: ['Designated', 'Alternate', 'Root', 'Backup'],
-        answer: 0,
-        explanation: 'Designated ports point away from the root bridge and are in a forwarding state once the LAN has converged.'
+        question: 'What does a router prioritize when selecting a route?',
+        options: ['Lowest AD', 'Lowest Metric', 'Longest Prefix Match', 'Fastest Interface'],
+        answer: 2,
+        explanation: 'Longest Prefix Match is the primary decision factor, followed by AD then Metric.'
+      }
+    ]
+  },
+  {
+    id: 'ospf',
+    title: 'OSPFv2',
+    description: 'Dynamic link-state routing.',
+    sections: [
+      {
+        title: 'Adjacency Requirements',
+        content: 'Neighbors must match on: Hello/Dead timers, Area ID, Authentication, Subnet Mask, and MTU.'
+      }
+    ],
+    quiz: [
+      {
+        question: 'What is the default Administrative Distance for OSPF?',
+        options: ['90', '100', '110', '120'],
+        answer: 2,
+        explanation: 'OSPF has an AD of 110. (Connected=0, Static=1, EIGRP=90, RIP=120).'
+      }
+    ]
+  },
+  {
+    id: 'nat',
+    title: 'NAT & PAT',
+    description: 'Conserving IPv4 addresses.',
+    sections: [
+      {
+        title: 'NAT Types',
+        content: 'Static NAT: 1-to-1 mapping.\nDynamic NAT: Many-to-many from a pool.\nPAT (Overload): Many-to-one using unique port numbers.'
+      }
+    ],
+    quiz: [
+      {
+        question: 'Which type of NAT allows thousands of hosts to share a single public IP?',
+        options: ['Static NAT', 'Dynamic NAT', 'PAT (Overload)', 'NAT-PT'],
+        answer: 2,
+        explanation: 'Port Address Translation (PAT) uses source port numbers to distinguish between traffic flows from different hosts.'
+      }
+    ]
+  },
+  {
+    id: 'acls',
+    title: 'Access Control Lists (ACLs)',
+    description: 'The foundation of network security.',
+    sections: [
+      {
+        title: 'Standard vs Extended',
+        content: 'Standard (1-99): Filters by Source IP only. Place near destination.\nExtended (100-199): Filters by Source/Dest IP, Protocol, and Port. Place near source.'
+      }
+    ],
+    quiz: [
+      {
+        question: 'Where should a Standard ACL be placed?',
+        options: ['Near the source', 'Near the destination', 'On the core switch', 'In the middle of the path'],
+        answer: 1,
+        explanation: 'Standard ACLs should be placed as close to the destination as possible because they only filter by source IP.'
+      }
+    ]
+  },
+  {
+    id: 'dhcp-dns-ntp',
+    title: 'IP Services',
+    description: 'DHCP, DNS, and NTP.',
+    sections: [
+      {
+        title: 'DHCP Process',
+        content: 'DORA: Discover, Offer, Request, Acknowledge.'
       },
       {
-        question: 'What happens when a switch port configured with BPDU Guard receives a BPDU?',
-        options: [
-          'The port ignores the BPDU.',
-          'The port is error-disabled.',
-          'BPDU Guard is disabled.',
-          'The port moves to forwarding.'
-        ],
+        title: 'NTP Stratum',
+        content: 'Stratum 0 is an atomic clock. Stratum 1 is a server directly connected to it. Lower numbers are more authoritative.'
+      }
+    ],
+    quiz: [
+      {
+        question: 'What is the DHCP message sequence?',
+        options: ['Discover, Request, Offer, Ack', 'Discover, Offer, Request, Ack', 'Request, Discover, Ack, Offer', 'Offer, Discover, Request, Ack'],
         answer: 1,
-        explanation: 'BPDU Guard error-disables a port if it receives a BPDU, preventing unauthorized switches from joining the topology.'
+        explanation: 'DORA: Discover (Client), Offer (Server), Request (Client), Acknowledge (Server).'
+      }
+    ]
+  },
+  {
+    id: 'wireless',
+    title: 'Wireless Fundamentals',
+    description: 'Networking without wires.',
+    sections: [
+      {
+        title: 'Architecture',
+        content: 'Autonomous APs: Self-contained.\nLightweight APs: Managed by a Wireless LAN Controller (WLC) using CAPWAP (UDP 5246/5247).'
+      }
+    ],
+    quiz: [
+      {
+        question: 'Which protocol is used for communication between a WLC and an LAP?',
+        options: ['STP', 'CAPWAP', 'CDP', 'LLDP'],
+        answer: 1,
+        explanation: 'CAPWAP (Control and Provisioning of Wireless Access Points) is the industry-standard protocol for WLC-AP communication.'
+      }
+    ]
+  },
+  {
+    id: 'security-fundamentals',
+    title: 'Security Fundamentals',
+    description: 'Protecting the infrastructure.',
+    sections: [
+      {
+        title: 'AAA',
+        content: 'Authentication (Who?), Authorization (What can you do?), Accounting (What did you do?).'
+      },
+      {
+        title: 'Threats',
+        content: 'Phishing: Deceptive emails.\nSocial Engineering: Manipulating people into giving secrets.\nBrute Force: Trying every password combo.'
+      }
+    ],
+    quiz: [
+      {
+        question: 'What does the first A in AAA stand for?',
+        options: ['Accounting', 'Authorization', 'Authentication', 'Audit'],
+        answer: 2,
+        explanation: 'Authentication is the process of verifying a user\'s identity.'
+      }
+    ]
+  },
+  {
+    id: 'automation',
+    title: 'Automation & Programmability',
+    description: 'Modern network operations.',
+    sections: [
+      {
+        title: 'Planes of Operation',
+        content: 'Data Plane: Forwarding traffic.\nControl Plane: Routing decisions (OSPF, etc.).\nManagement Plane: Config and monitoring (SSH, SNMP).'
+      },
+      {
+        title: 'API Formats',
+        content: 'JSON: Key-value pairs used in modern APIs. Uses {} for objects and [] for arrays.'
+      }
+    ],
+    quiz: [
+      {
+        question: 'Which plane is responsible for building the routing table?',
+        options: ['Data Plane', 'Control Plane', 'Management Plane', 'User Plane'],
+        answer: 1,
+        explanation: 'The Control Plane handles the intelligence of the network, like routing protocols and neighbor adjacencies.'
       }
     ]
   }
